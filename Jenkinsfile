@@ -1,13 +1,18 @@
 pipeline {
     agent any
-    environment {
-        CI = 'true'
-    }
+
     stages {
-        stage('Deploy') {
+        stage('Deploy with Helm') {
             steps {
-                sh 'kubectl config set-context --current --namespace weather'
-                sh 'helm upgrade --install weather src/app/chart -f src/app/chart/override.values.yaml'
+                script {
+                    withCredentials([file(credentialsId: 'kubeconfig_credential', variable: 'KUBECONFIG')]) {
+                        sh '''
+                            export KUBECONFIG=${KUBECONFIG}
+                            kubectl config set-context --current --namespace weather
+                            helm upgrade --install weather src/app/chart -f src/app/chart/override.values.yaml
+                        '''
+                    }
+                }
             }
         }
     }
