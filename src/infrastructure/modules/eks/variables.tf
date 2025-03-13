@@ -39,6 +39,17 @@ variable "eks_managed_node_groups" {
   default     = {}
 }
 
+variable "create_autoscaling_policy" {
+  description = "Create autoscaling policy or not"
+  type        = bool
+  default     = false
+}
+
+variable "average_cpu_target" {
+  type    = number
+  default = 80
+}
+
 variable "tags" {
   description = "A map of tags to add to all resources"
   type        = map(string)

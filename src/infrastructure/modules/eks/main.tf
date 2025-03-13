@@ -62,3 +62,18 @@ module "vpc_cni_irsa" {
 
   tags = var.tags
 }
+
+resource "aws_autoscaling_policy" "average_cpu_policy" {
+  for_each = var.create_autoscaling_policy ? toset(module.eks.eks_managed_node_groups_autoscaling_group_names) : []
+
+  name                   = "Average CPU Policy"
+  autoscaling_group_name = each.value
+  policy_type            = "TargetTrackingScaling"
+
+  target_tracking_configuration {
+    target_value = var.average_cpu_target
+    predefined_metric_specification {
+      predefined_metric_type = "ASGAverageCPUUtilization"
+    }
+  }
+}
