@@ -1,0 +1,16 @@
+cluster_name: eks-cluster
+cluster_version: "1.32"
+eks_managed_node_groups:
+  main:
+    use_custom_launch_template: true
+    force_update_version: true
+    ami_type: "BOTTLEROCKET_ARM_64"
+    platform: "bottlerocket"
+    version: "1.32"
+    instance_types: ["t4g.medium"]
+    min_size: 2
+    max_size: 10
+    desired_size: 2
+tags:
+  CreatedByTerraform: "true"
+  Environment: "prod"
